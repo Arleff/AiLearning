@@ -13,8 +13,8 @@ import numpy as np
 
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
-UPLOAD_ROOT = ROOT_DIR / 'services' / 'api' / 'data'
-RESULTS_ROOT = UPLOAD_ROOT / 'results'
+STORAGE_ROOT = ROOT_DIR / 'services' / 'api' / 'data' / 'storage'
+RESULTS_ROOT = STORAGE_ROOT / 'results'
 RESULTS_ROOT.mkdir(parents=True, exist_ok=True)
 
 
@@ -30,11 +30,11 @@ def local_path_from_source(source_video_url: str) -> Path:
   if parsed.scheme in ('', 'file'):
     if parsed.path.startswith('/media/'):
       relative_path = parsed.path.removeprefix('/media/')
-      return UPLOAD_ROOT / relative_path
+      return STORAGE_ROOT / relative_path
     return Path(parsed.path)
   if parsed.path.startswith('/media/'):
     relative_path = parsed.path.removeprefix('/media/')
-    return UPLOAD_ROOT / relative_path
+    return STORAGE_ROOT / relative_path
   raise ValueError(f'Unsupported source video url: {source_video_url}')
 
 
