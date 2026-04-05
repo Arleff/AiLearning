@@ -28,12 +28,12 @@ def request_json(url: str, method: str = 'GET', payload: dict | None = None):
 def local_path_from_source(source_video_url: str) -> Path:
   parsed = urlparse(source_video_url)
   if parsed.scheme in ('', 'file'):
-    if parsed.path.startswith('/storage/'):
-      relative_path = parsed.path.removeprefix('/storage/')
+    if parsed.path.startswith('/media/'):
+      relative_path = parsed.path.removeprefix('/media/')
       return UPLOAD_ROOT / relative_path
     return Path(parsed.path)
-  if parsed.path.startswith('/storage/'):
-    relative_path = parsed.path.removeprefix('/storage/')
+  if parsed.path.startswith('/media/'):
+    relative_path = parsed.path.removeprefix('/media/')
     return UPLOAD_ROOT / relative_path
   raise ValueError(f'Unsupported source video url: {source_video_url}')
 
@@ -160,8 +160,8 @@ def analyze_video(job: dict, api_base: str) -> dict:
   cv2.imwrite(str(preview_path), preview_frame)
   path_summary, insights, tempo_score = trajectory_summary(points)
 
-  processed_video_url = f'{api_base}/storage/results/job-{job["id"]}/trajectory.mp4'
-  preview_image_url = f'{api_base}/storage/results/job-{job["id"]}/preview.jpg'
+  processed_video_url = f'{api_base}/media/results/job-{job["id"]}/trajectory.mp4'
+  preview_image_url = f'{api_base}/media/results/job-{job["id"]}/preview.jpg'
   return {
     'processed_video_url': processed_video_url,
     'preview_image_url': preview_image_url,

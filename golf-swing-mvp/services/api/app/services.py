@@ -72,7 +72,7 @@ def create_upload_ticket(user_id: int, filename: str) -> dict:
   with get_conn() as conn:
     ensure_user_exists(conn, user_id)
   object_key = f'uploads/user-{user_id}/{uuid4().hex}-{filename}'
-  return {'object_key': object_key, 'object_url': f'/storage/{object_key}', 'upload_method': 'PUT'}
+  return {'object_key': object_key, 'object_url': f'/media/{object_key}', 'upload_method': 'PUT'}
 
 
 def store_uploaded_video(user_id: int, filename: str, file_obj) -> dict:
@@ -92,7 +92,7 @@ def store_uploaded_video(user_id: int, filename: str, file_obj) -> dict:
   return {
     'filename': safe_name,
     'stored_path': str(stored_path),
-    'object_url': f'/storage/{relative_path.as_posix()}',
+    'object_url': f'/media/{relative_path.as_posix()}',
   }
 
 
@@ -220,7 +220,7 @@ def complete_job(job_id: int, payload: dict) -> dict:
 def build_media_url(path: str | Path) -> str:
   media_root = STORAGE_DIR
   relative_path = Path(path).relative_to(media_root)
-  return f'/storage/{relative_path.as_posix()}'
+  return f'/media/{relative_path.as_posix()}'
 
 
 def fail_job(job_id: int, error_message: str) -> dict:
