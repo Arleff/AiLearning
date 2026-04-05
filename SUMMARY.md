@@ -17,3 +17,4 @@
 +   [第16章_推荐系统](docs/ml/16.推荐系统.md)
 +   [为何录制教学版视频](docs/why-to-record-study-ml-video.md)
 +   [加入我们](docs/join-us.md)
++   [微信小程序_高尔夫挥杆MVP方案](docs/微信小程序-高尔夫挥杆MVP方案.md)
