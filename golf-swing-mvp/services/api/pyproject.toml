@@ -7,4 +7,9 @@ name = "golf-swing-mvp-api"
 version = "0.1.0"
 description = "FastAPI backend for golf swing MVP"
 requires-python = ">=3.12"
-dependencies = ["fastapi", "uvicorn[standard]"]
+dependencies = [
+  "fastapi",
+  "opencv-python-headless",
+  "python-multipart",
+  "uvicorn[standard]"
+]

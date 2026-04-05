@@ -1,7 +1,12 @@
 import json
+import shutil
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from uuid import uuid4
-from fastapi import HTTPException
+
+from fastapi import HTTPException, UploadFile
+
+from .config import STORAGE_DIR, UPLOADS_DIR
 from .db import get_conn
 
 
@@ -67,7 +72,34 @@ def create_upload_ticket(user_id: int, filename: str) -> dict:
   with get_conn() as conn:
     ensure_user_exists(conn, user_id)
   object_key = f'uploads/user-{user_id}/{uuid4().hex}-{filename}'
-  return {'object_key': object_key, 'object_url': f'https://mock-storage.local/{object_key}', 'upload_method': 'PUT'}
+  return {'object_key': object_key, 'object_url': f'/storage/{object_key}', 'upload_method': 'PUT'}
+
+
+def store_uploaded_video(user_id: int, filename: str, file_obj) -> dict:
+  with get_conn() as conn:
+    ensure_user_exists(conn, user_id)
+
+  safe_name = Path(filename).name or f'{uuid4().hex}.mp4'
+  ext = Path(safe_name).suffix or '.mp4'
+  target_dir = UPLOADS_DIR / f'user-{user_id}'
+  target_dir.mkdir(parents=True, exist_ok=True)
+  stored_name = f'{uuid4().hex}{ext}'
+  stored_path = target_dir / stored_name
+  with stored_path.open('wb') as buffer:
+    shutil.copyfileobj(file_obj, buffer)
+
+  relative_path = stored_path.relative_to(STORAGE_DIR)
+  return {
+    'filename': safe_name,
+    'stored_path': str(stored_path),
+    'object_url': f'/storage/{relative_path.as_posix()}',
+  }
+
+
+async def save_uploaded_video(user_id: int, file: UploadFile) -> dict:
+  if not file.filename:
+    raise HTTPException(status_code=400, detail='缺少文件名')
+  return store_uploaded_video(user_id, file.filename, file.file)
 
 
 def create_job(user_id: int, video_name: str, source_video_url: str, camera_view: str) -> dict:
@@ -75,7 +107,7 @@ def create_job(user_id: int, video_name: str, source_video_url: str, camera_view
     user = ensure_user_exists(conn, user_id)
     cursor = conn.execute(
       'INSERT INTO analysis_jobs (user_id, video_name, source_video_url, preview_image_url, processed_video_url, result_json, camera_view, status, error_message, is_paid_unlock, created_at, finished_at) VALUES (?, ?, ?, ?, NULL, NULL, ?, ?, NULL, 0, ?, NULL)',
-      (user_id, video_name, source_video_url, f'https://mock-storage.local/previews/{uuid4().hex}.jpg', camera_view, 'pending', now_iso()),
+      (user_id, video_name, source_video_url, None, camera_view, 'pending', now_iso()),
     )
     job = conn.execute('SELECT * FROM analysis_jobs WHERE id = ?', (cursor.lastrowid,)).fetchone()
   return serialize_job(job, user)
@@ -183,6 +215,12 @@ def complete_job(job_id: int, payload: dict) -> dict:
       ('success', payload['processed_video_url'], payload['preview_image_url'], result_json, now_iso(), job_id),
     )
     return conn.execute('SELECT * FROM analysis_jobs WHERE id = ?', (job_id,)).fetchone()
+
+
+def build_media_url(path: str | Path) -> str:
+  media_root = STORAGE_DIR
+  relative_path = Path(path).relative_to(media_root)
+  return f'/storage/{relative_path.as_posix()}'
 
 
 def fail_job(job_id: int, error_message: str) -> dict:

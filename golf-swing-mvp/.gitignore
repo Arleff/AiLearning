@@ -5,6 +5,8 @@ __pycache__/
 *.pyo
 *.db
 services/api/data/*.db
+services/api/data/uploads/
+services/api/data/results/
 node_modules/
 dist/
 build/

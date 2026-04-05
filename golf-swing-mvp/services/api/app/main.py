@@ -1,11 +1,14 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, File, Form, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from .config import STORAGE_DIR
 from .db import init_db
 from .schemas import CompleteJobRequest, CreateJobRequest, CreateOrderRequest, FailJobRequest, LoginRequest, UploadTicketRequest
-from .services import claim_job, complete_job, create_job, create_order, create_upload_ticket, fail_job, get_job, get_subscription, list_jobs, list_pending_jobs, mock_login, pay_order
+from .services import claim_job, complete_job, create_job, create_order, create_upload_ticket, fail_job, get_job, get_subscription, list_jobs, list_pending_jobs, mock_login, pay_order, store_uploaded_video
 
 app = FastAPI(title='Golf Swing MVP API', version='0.1.0')
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_credentials=True, allow_methods=['*'], allow_headers=['*'])
+app.mount('/media', StaticFiles(directory=STORAGE_DIR), name='media')
 
 @app.on_event('startup')
 def startup_event() -> None:
@@ -22,6 +25,14 @@ def auth_mock_login(payload: LoginRequest) -> dict:
 @app.post('/api/uploads/presign')
 def uploads_presign(payload: UploadTicketRequest) -> dict:
   return create_upload_ticket(payload.user_id, payload.filename)
+
+
+@app.post('/api/uploads/video')
+async def uploads_video(
+  user_id: int = Form(...),
+  file: UploadFile = File(...),
+) -> dict:
+  return store_uploaded_video(user_id, file.filename or 'upload.mp4', file.file)
 
 @app.post('/api/analysis/jobs')
 def analysis_create_job(payload: CreateJobRequest) -> dict:
