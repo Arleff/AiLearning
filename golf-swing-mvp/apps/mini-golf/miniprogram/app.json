@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/upload/upload",
+    "pages/history/history",
+    "pages/profile/profile",
+    "pages/result/result"
+  ],
+  "window": {
+    "navigationBarTitleText": "挥杆分析助手",
+    "navigationBarBackgroundColor": "#0F766E",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F8FAFC"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

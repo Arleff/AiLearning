@@ -1,0 +1,8 @@
+<view class="container">
+  <view class="card" wx:if="{{loading}}"><view class="muted">结果加载中...</view></view>
+  <view wx:elif="{{job}}">
+    <view class="card"><view class="title">任务 #{{job.id}}</view><view class="subtitle">{{job.video_name}}</view><view class="tag">{{job.status}}</view><view class="muted">视角：{{job.camera_view}}</view><button class="secondary-btn" bindtap="refresh">刷新状态</button></view>
+    <view class="card"><view class="title">结果权限</view><view wx:if="{{job.is_accessible}}" class="muted">已解锁完整结果。</view><view wx:else class="muted">当前仅可查看预览，请按次解锁或开通会员。</view><button wx:if="{{!job.is_accessible}}" class="primary-btn" bindtap="paySingle">单次解锁（19.9）</button></view>
+    <view class="card"><view class="title">分析摘要</view><view wx:if="{{job.result_json}}"><view class="muted">路径：{{job.result_json.path_summary}}</view><view class="muted">节奏分：{{job.result_json.tempo_score}}</view><view class="subtitle">建议：</view><view wx:for="{{job.result_json.insights}}" wx:key="*this" class="muted">- {{item}}</view></view><view wx:else class="muted">任务尚未完成或结果未解锁。</view></view>
+  </view>
+</view>

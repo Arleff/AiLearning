@@ -1,0 +1,9 @@
+{
+  "description": "Golf Swing MVP Mini Program",
+  "packOptions": {"ignore": []},
+  "setting": {"es6": true, "enhance": true, "postcss": true, "minified": true, "urlCheck": false},
+  "compileType": "miniprogram",
+  "libVersion": "3.6.3",
+  "appid": "touristappid",
+  "projectname": "mini-golf"
+}

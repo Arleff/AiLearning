@@ -1,0 +1,4 @@
+<view class="container">
+  <view class="card"><view class="title">上传挥杆视频</view><view class="subtitle">首版支持 15 秒以内的标准拍摄视频。</view><button class="primary-btn" bindtap="chooseVideo">选择视频</button><view wx:if="{{videoName}}" class="muted">已选择：{{videoName}}</view></view>
+  <view class="card"><view class="title">选择拍摄视角</view><radio-group bindchange="changeCameraView"><label wx:for="{{cameraViews}}" wx:key="*this" style="display:block;margin-bottom:16rpx;"><radio value="{{index}}" checked="{{item === selectedCameraView}}" /><text>{{item}}</text></label></radio-group><button class="primary-btn" loading="{{submitting}}" bindtap="submitJob">提交分析任务</button></view>
+</view>

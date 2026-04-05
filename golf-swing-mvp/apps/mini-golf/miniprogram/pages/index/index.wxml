@@ -1,0 +1,11 @@
+<view class="container">
+  <view class="card">
+    <view class="title">高尔夫挥杆分析 MVP</view>
+    <view class="subtitle">上传挥杆视频，自动生成轨迹并支持按次或会员解锁。</view>
+    <view class="tag">上传视频</view><view class="tag">绘制轨迹</view><view class="tag">付费解锁</view>
+    <button class="primary-btn" bindtap="goUpload">开始上传</button>
+    <button class="secondary-btn" bindtap="goHistory">查看历史</button>
+    <button class="secondary-btn" bindtap="goProfile">我的 / 登录</button>
+  </view>
+  <view class="card"><view class="title">拍摄建议</view><view class="muted">建议固定机位、单人出镜、光线充足，优先使用侧面视角。</view></view>
+</view>
