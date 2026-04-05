@@ -1,7 +1,0 @@
-Metadata-Version: 2.4
-Name: golf-swing-mvp-api
-Version: 0.1.0
-Summary: FastAPI backend for golf swing MVP
-Requires-Python: >=3.12
-Requires-Dist: fastapi
-Requires-Dist: uvicorn[standard]
