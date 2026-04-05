@@ -13,3 +13,6 @@ dependencies = [
   "python-multipart",
   "uvicorn[standard]"
 ]
+
+[tool.setuptools]
+packages = ["app"]

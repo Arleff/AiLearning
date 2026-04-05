@@ -28,6 +28,9 @@ def request_json(url: str, method: str = 'GET', payload: dict | None = None):
 def local_path_from_source(source_video_url: str) -> Path:
   parsed = urlparse(source_video_url)
   if parsed.scheme in ('', 'file'):
+    if parsed.path.startswith('/storage/'):
+      relative_path = parsed.path.removeprefix('/storage/')
+      return UPLOAD_ROOT / relative_path
     return Path(parsed.path)
   if parsed.path.startswith('/storage/'):
     relative_path = parsed.path.removeprefix('/storage/')
